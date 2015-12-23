@@ -5,6 +5,7 @@ Created on Sat Dec  5 22:24:53 2015
 @author: buruzaemon
 """
 import nltk
+import re
 import tarfile
 from bs4 import BeautifulSoup
 from contextlib import closing
@@ -16,35 +17,45 @@ from gensim.corpora.dictionary import Dictionary
 from gensim.corpora.textcorpus import TextCorpus
 
 
-PATT = r'''(?x)    # set flag to allow verbose regexps
-    ([A-Z]\.)+          # abbreviations, e.g. U.S.A.
-    | \w+(-\w+)*        # words with optional internal hyphens
-    | \$?\d+(\.\d+)?%?  # currency and percentages, e.g. $12.40, 82%
-    | \.\.\.            # ellipsis
-    | [][.,;"'?():-_`]  # these are separate tokens; includes ], [
+PATT = r'''(?x)
+# abbreviations, e.g. U.S.A.
+([A-Z]\.)+
+
+# major cities / countries, attempt #1
+| (?<![a-zA-Z])((Buenos|Cape|East(ern)?|El|Fort|Hong|Las|Los|New|North(ern)?|Puerto|Port|Rio(\sde)?|Saint|San|St\.|São|Sierra|Saudi|South(ern)?|United|West(ern)?)[\s][A-Z][a-z]+)(?![a-zA-Z])
+
+# major cities / countries, attempt #2
+| (?<![a-zA-Z])(([A-Z][a-z]+)\s(City|Island(s)|Republic))(?![a-zA-Z])
+
+# words with optional internal hyphens
+| \w+(-\w+)*        
+
+# currency and percentages, e.g. $12.40, 82%
+| \$?\d+(\.\d+)?%?  
+
+# ellipsis
+| \.\.\. 
+
+# these are separate tokens; includes ], [           
+| [][.,;"'?!():-_`]  
 '''
 
 
 class ReutersCorpus(TextCorpus):
     """
-    Treat a wikipedia articles dump (\*articles.xml.bz2) as a (read-only) corpus.
+    Treat the Reuters 21578 dataset (data/reuters21578.tar.gz) as a
+    read-only corpus.
+    
+    The documents are read in while iterating the archive file.
 
-    The documents are extracted on-the-fly, so that the whole (massive) dump
-    can stay compressed on disk.
-
-    >>> wiki = WikiCorpus('enwiki-20100622-pages-articles.xml.bz2') # create word->word_id mapping, takes almost 8h
-    >>> MmCorpus.serialize('wiki_en_vocab200k', wiki) # another 8h, creates a file in MatrixMarket format plus file with id->word
+    >>> rc = ReutersCorpus('data/reuters21578.tar.gz') 
+    >>> MmCorpus.serialize('data/reuters_bow.mm', rc) 
 
     """
     def __init__(self, fname, dictionary=None):
         """
         Initialize the corpus. Unless a dictionary is provided, this scans the
         corpus once, to determine its vocabulary.
-
-        If `pattern` package is installed, use fancier shallow parsing to get
-        token lemmas. Otherwise, use simple regexp tokenization. You can override
-        this automatic logic by forcing the `lemmatize` parameter explicitly.
-
         """
         self.fname = fname
         self.metadata = False        
@@ -54,15 +65,21 @@ class ReutersCorpus(TextCorpus):
             for text in self.get_texts():
                 dictionary.add_documents([text])
         self.dictionary = dictionary
+        
+    def clean_text(self, text):
+        # Gensim Dictionary is tab-delimited, 
+        # so we cannot allow allow any tabs in the text
+        cleaned = re.sub(r'\t', r' ', text)
+        
+        cleaned = re.sub(r'\n', r' ', cleaned)
+        
+        return cleaned
 
     def get_texts(self):
         """
-        Iterate over the collection, yielding one document at a time. A document
-        is a sequence of words (strings) that can be fed into `Dictionary.doc2bow`.
-
-        Override this function to match your input (parse input files, do any
-        text preprocessing, lowercasing, tokenizing etc.). There will be no further
-        preprocessing of the words coming out of this function.
+        Iterate over the collection, yielding one document at a time. 
+        A document is a sequence of words (strings) that can be fed into
+        `Dictionary.doc2bow`.
         """
         ignore = stopwords.words("english")
         lemm = nltk.WordNetLemmatizer()
@@ -73,10 +90,11 @@ class ReutersCorpus(TextCorpus):
                     with closing(archive.extractfile(f)) as data:
                         soup = BeautifulSoup(data, "html.parser")
                         for body in soup.find_all("body"):
-                            tokens = nltk.regexp_tokenize(body.text, PATT)
+                            text = self.clean_text(body.text)
+                            tokens = [t.lower() for t in nltk.regexp_tokenize(text, PATT)]
         
                             # HOW DO YOU WANT TO FILTER THE TEXT TOKENS?
-                            yield [lemm.lemmatize(t.lower()) for t in tokens if t not in ignore]
+                            yield [lemm.lemmatize(t) for t in tokens if t not in ignore]
 
 # endclass ReutersCorpus
 
