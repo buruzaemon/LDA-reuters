@@ -6,6 +6,7 @@ across range of number of topics.
 
 import os
 import matplotlib.pyplot as plt
+import multiprocessing as mp
 import numpy as np
 import scipy.stats as stats
 import time
@@ -30,19 +31,19 @@ def arun(corpus, dictionary, min_topics=10, max_topics=100, step=10):
     l = np.array([sum(cnt for _, cnt in doc) for doc in corpus])
     
     kl = []
-    for n in range(min_topics, max_topics, step):
+    for n in range(min_topics, max_topics+step, step):
         print("starting multicore LDA for num_topics={}".format(n))
         st = time.clock()
         lda = LdaMulticore(corpus=corpus,
                            id2word=vocabulary,
                            num_topics=n,
                            passes=20,
-                           workers=3)
+                           workers=mp.cpu_count()-1)
         el = time.clock()-st
-        print("multicore LDA finished in {:.2f}!".format(el))
+        print("multicore LDA finished in {:.2f}s!".format(el))
         
         m1 = lda.expElogbeta
-        U,cm1,V = np.linalg.svd(m1)
+        _, cm1, _ = np.linalg.svd(m1)
         
         lda_topics = lda[corpus]
         m2 = matutils.corpus2dense(lda_topics, lda.num_topics).transpose()
@@ -54,9 +55,14 @@ def arun(corpus, dictionary, min_topics=10, max_topics=100, step=10):
         
     return kl
     
+  
 kl = arun(mm, vocabulary, min_topics=5, max_topics=100, step=5)
+x = list(range(5,100+5,5))  
+labels = ["{}".format(e) for e in range(5,105,5)]
 
-plt.plot(kl)
-plt.ylabel("Sym. KL Divergence")
+plt.plot(x, kl)
+plt.xticks(x, labels, rotation=60)
+plt.title("Number of LDA Topics & KL Divergence")
+plt.ylabel("KL Divergence")
 plt.xlabel("Num. of Topics")
 plt.savefig("sym_kl_div.png", bbox_inches="tight")
