@@ -86,5 +86,6 @@ def tokenize(text):
         Tokens will be lower-cased, with stopwords removed.
         Lemmatization via NLTK lemmative.
     """
-    tokens = [t.lower() for t in nltk.regexp_tokenize(text, __PATT)]
+    #tokens = [t.lower() for t in nltk.regexp_tokenize(text, __PATT)]
+    tokens = [t.lower() for t in nltk.tokenize.wordpunct_tokenize(text)]
     return [__LEMM.lemmatize(t) for t in tokens if t not in __STOPWORDS]

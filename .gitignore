@@ -1,2 +1,5 @@
 *.pyc
+*.ipynb_checkpoints/
 /notebooks/.ipynb_checkpoints/
+data/*.mm
+data/*.pkl

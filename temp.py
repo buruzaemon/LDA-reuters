@@ -58,10 +58,10 @@ def arun(corpus, dictionary, min_topics=10, max_topics=100, step=10):
   
 kl = arun(mm, vocabulary, min_topics=5, max_topics=100, step=5)
 x = list(range(5,100+5,5))  
-labels = ["{}".format(e) for e in range(5,105,5)]
+labels = ["{}".format(e) for e in x]
 
 plt.plot(x, kl)
-plt.xticks(x, labels, rotation=60)
+plt.xticks(x, labels)
 plt.title("Number of LDA Topics & KL Divergence")
 plt.ylabel("KL Divergence")
 plt.xlabel("Num. of Topics")
