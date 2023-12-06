@@ -2,42 +2,34 @@
 """ eda.text.utilities provides functions for cleaning and tokenizing the
     Reuters 21578 corpus.
 """
-import nltk
+
 import re
-from .stopwords import stopwords
+import spacy
 
-__LEMM = nltk.WordNetLemmatizer()
+nlp = spacy.load("en_core_web_md")
 
-__STOPWORDS = stopwords()
+NER_KEEP = [
+    "ORG", 
+    "GPE", 
+    "PERSON", 
+    "NORP",
+    "PRODUCT", 
+    "WORK_OF_ART", 
+    "FACILITY", 
+    "EVENT", 
+    "LOC", 
+    "LAW", 
+    "MONEY", 
+    "DATE"
+]
 
-__PATT = r'''(?x)
-# entities
-(?<=[\<\+])([a-zA-Z0-9 \.]+)(?=[\>|\+])
-
-# contractions
-| (?<=[ ])(n't|'d|'m|'s|'ll|'re|'ve)(?=[ ])
-
-# currency and percentages, e.g. $12.40, 82%
-| (?<=[\$ ])([0-9]+[0-9,\.]+[0-9]+)(?=[% ])
-
-# abbreviations, e.g. U.S.A.
-| ([A-Z]\.)+
-
-# major cities / countries, attempt #1
-| (?<![a-zA-Z])((Buenos|Cape|East(ern)?|El|Fort|Hong|Las|Los|New|North(ern)?|Puerto|Port|Rio(\sde)?|Saint|San|St\.|São|Sierra|Saudi|South(ern)?|United|West(ern)?)[\s][A-Z][a-z]+)(?![a-zA-Z])
-
-# major cities / countries, attempt #2
-| (?<![a-zA-Z])(([A-Z][a-z]+)\s(City|Island(s)|Republic))(?![a-zA-Z])
-
-# words with optional internal hyphens
-| \w+([-/]\w+)*
-
-# ellipsis
-| \.\.\.
-
-# these are separate tokens; includes ], [
-| [!"#$%&'()*+,-./:;<=>?@[]\^_{|}~]
-'''
+NER_IGNORE = [
+    "CARDINAL", 
+    "QUANTITY", 
+    "ORDINAL", 
+    "PERCENT", 
+    "TIME"
+]
 
 def clean(text):
     """ Cleans the argument text, in the context of the Reuters 21578 dataset.
@@ -62,30 +54,31 @@ def clean(text):
     # delete those control chars in *.sgm
     cleaned = re.sub(r'\x03', r'', cleaned)
 
-    # surround negative contractions w/ whitespace
-    cleaned = re.sub(r"(?<=(ai|ca|do|is|wo))(n't)(?!=[a-z])", r' \2 ', cleaned, flags=re.I)
-    cleaned = re.sub(r"(?<=(are|did|had|has|sha|was))(n't)(?!=[a-z])", r' \2 ', cleaned, flags=re.I)
-    cleaned = re.sub(r"(?<=(does|have|must|need|were))(n't)(?!=[a-z])", r' \2 ', cleaned, flags=re.I)
-    cleaned = re.sub(r"(?<=(could|might|ought|would))(n't)(?!=[a-z])", r' \2 ', cleaned, flags=re.I)
-    cleaned = re.sub(r"(?<=should)(n't)(?!=[a-z])", r' \1 ', cleaned, flags=re.I)
-
-    # surround pronoun contractions w/ whitespace
-    cleaned = re.sub(r"(?<=i)('d|'ll|'m|'ve)(?!=[a-z])", r' \1 ', cleaned, flags=re.I)
-    cleaned = re.sub(r"(?<=he)('d|'ll|'s)(?!=[a-z])", r' \1 ', cleaned, flags=re.I)
-    cleaned = re.sub(r"(?<=she)('d|'ll|'s)(?!=[a-z])", r' \1 ', cleaned, flags=re.I)
-    cleaned = re.sub(r"(?<=we)('d|'ll|'re|'ve)(?!=[a-z])", r' \1 ', cleaned, flags=re.I)
-    cleaned = re.sub(r"(?<=they)('d|'ll|'re|'ve)(?!=[a-z])", r' \1 ', cleaned, flags=re.I)
-    cleaned = re.sub(r"(?<=you)('d|'ll|'re|'ve)(?!=[a-z])", r' \1 ', cleaned, flags=re.I)
-
     return cleaned.strip()
+
 
 def tokenize(text):
     """ Returns the tokens in the given text.
 
-        Tokenization is via NLTK regexp_tokenize.
-        Tokens will be lower-cased, with stopwords removed.
-        Lemmatization via NLTK lemmative.
+        Tokenization and filtering via spaCy's English NLP pipeline.
     """
-    #tokens = [t.lower() for t in nltk.regexp_tokenize(text, __PATT)]
-    tokens = [t.lower() for t in nltk.tokenize.wordpunct_tokenize(text)]
-    return [__LEMM.lemmatize(t) for t in tokens if t not in __STOPWORDS]
+    token_acc = []
+    entity_acc = []
+
+    for token in nlp(text):
+        if token.ent_iob_ in ("B", "I") and token.ent_type_ in NER_KEEP:
+            entity_acc.append( token.text )
+        else:
+            if len(entity_acc) > 0:
+                token_acc.append( "_".join([e.lower() for e in entity_acc]) )
+                entity_acc = []
+            if not (token.ent_type_ in NER_IGNORE or
+                    token.is_punct or
+                    token.is_space or
+                    token.is_bracket or
+                    token.is_stop):
+                token_acc.append( token.text.lower() )
+    if len(entity_acc) > 0:
+        token_acc.append( "_".join([e.lower() for e in entity_acc]) )
+
+    return token_acc

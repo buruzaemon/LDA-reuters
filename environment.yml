@@ -1,5 +1,6 @@
 name: LDA-reuters
 channels:
+  - conda-forge
   - defaults
 dependencies:
   - anyio=3.5.0=py39hecd8cb5_0
@@ -18,17 +19,21 @@ dependencies:
   - brotli=1.0.9=hca72f7f_7
   - brotli-bin=1.0.9=hca72f7f_7
   - brotli-python=1.0.9=py39he9d5cce_7
-  - bs4=4.12.2=py38hd3eb1b0_0
-  - ca-certificates=2023.08.22=hecd8cb5_0
-  - certifi=2023.11.17=py39hecd8cb5_0
+  - ca-certificates=2023.11.17=h8857fd0_0
+  - catalogue=2.0.7=py39hecd8cb5_0
+  - certifi=2023.11.17=pyhd8ed1ab_0
   - cffi=1.16.0=py39h6c40b1e_0
   - charset-normalizer=2.0.4=pyhd3eb1b0_0
   - click=8.1.7=py39hecd8cb5_0
+  - colorama=0.4.6=py39hecd8cb5_0
   - comm=0.1.2=py39hecd8cb5_0
-  - confuse=1.5.0=pyhd3eb1b0_0
+  - confection=0.0.4=py39h01d92e1_0
+  - confuse=2.0.1=pyhd8ed1ab_0
   - contourpy=1.2.0=py39ha357a0b_0
   - cryptography=41.0.3=py39h30e54ef_0
   - cycler=0.11.0=pyhd3eb1b0_0
+  - cymem=2.0.6=py39he9d5cce_0
+  - cython-blis=0.7.9=py39hacda100_0
   - debugpy=1.6.7=py39hcec6c5f_0
   - decorator=5.1.1=pyhd3eb1b0_0
   - defusedxml=0.7.1=pyhd3eb1b0_0
@@ -36,6 +41,10 @@ dependencies:
   - executing=0.8.3=pyhd3eb1b0_0
   - fonttools=4.25.0=pyhd3eb1b0_0
   - freetype=2.12.1=hd8bbffd_0
+  - fst-pso=1.8.1=pyhd8ed1ab_0
+  - funcy=2.0=pyhd8ed1ab_0
+  - future=0.18.3=pyhd8ed1ab_0
+  - fuzzytm=2.0.5=pyhd8ed1ab_0
   - gensim=4.3.0=py39hcec6c5f_0
   - giflib=5.2.1=h6c40b1e_3
   - htmlmin=0.1.12=pyhd3eb1b0_1
@@ -50,7 +59,7 @@ dependencies:
   - ipywidgets=8.0.4=py39hecd8cb5_0
   - jedi=0.18.1=py39hecd8cb5_1
   - jinja2=3.1.2=py39hecd8cb5_0
-  - joblib=1.2.0=py39hecd8cb5_0
+  - joblib=1.3.2=pyhd8ed1ab_0
   - jpeg=9e=h6c40b1e_1
   - json5=0.9.6=pyhd3eb1b0_0
   - jsonschema=4.19.2=py39hecd8cb5_0
@@ -66,6 +75,7 @@ dependencies:
   - jupyterlab_server=2.25.1=py39hecd8cb5_0
   - jupyterlab_widgets=3.0.9=py39hecd8cb5_0
   - kiwisolver=1.4.4=py39hcec6c5f_0
+  - langcodes=3.3.0=pyhd3eb1b0_0
   - lcms2=2.12=hf1fd2bf_0
   - lerc=3.0=he9d5cce_0
   - libbrotlicommon=1.0.9=hca72f7f_7
@@ -83,48 +93,56 @@ dependencies:
   - libwebp-base=1.3.2=h6c40b1e_0
   - llvm-openmp=14.0.6=h0dcd299_0
   - lz4-c=1.9.4=hcec6c5f_0
-  - markupsafe=2.1.1=py39hca72f7f_0
+  - markupsafe=2.0.1=py39h9ed2024_0
   - matplotlib=3.8.0=py39hecd8cb5_0
   - matplotlib-base=3.8.0=py39hb47e01b_0
   - matplotlib-inline=0.1.6=py39hecd8cb5_0
+  - miniful=0.0.6=pyhd8ed1ab_0
   - missingno=0.4.2=pyhd3eb1b0_1
   - mistune=2.0.4=py39hecd8cb5_0
   - mkl=2023.1.0=h8e150cf_43560
   - mkl-service=2.4.0=py39h6c40b1e_1
   - mkl_fft=1.3.8=py39h6c40b1e_0
   - mkl_random=1.2.4=py39ha357a0b_0
+  - multimethod=1.4=pyhd3eb1b0_0
   - munkres=1.1.4=py_0
+  - murmurhash=1.0.7=py39he9d5cce_0
   - nbclient=0.8.0=py39hecd8cb5_0
   - nbconvert=7.10.0=py39hecd8cb5_0
   - nbformat=5.9.2=py39hecd8cb5_0
   - ncurses=6.4=hcec6c5f_0
   - nest-asyncio=1.5.6=py39hecd8cb5_0
   - networkx=3.1=py39hecd8cb5_0
-  - nltk=3.8.1=py39hecd8cb5_0
   - notebook-shim=0.2.3=py39hecd8cb5_0
   - numexpr=2.8.7=py39h827a554_0
   - numpy=1.26.2=py39h827a554_0
   - numpy-base=1.26.2=py39ha186be2_0
   - openjpeg=2.4.0=h66ea3da_0
-  - openssl=3.0.12=hca72f7f_0
+  - openssl=3.2.0=hd75f5a5_1
   - overrides=7.4.0=py39hecd8cb5_0
   - packaging=23.1=py39hecd8cb5_0
-  - pandas-profiling=2.9.0=pyhd3eb1b0_0
+  - pandas=2.1.1=py39h3ea8b11_0
+  - pandas-profiling=3.0.0=pyhd8ed1ab_0
   - pandocfilters=1.5.0=pyhd3eb1b0_0
   - parso=0.8.3=pyhd3eb1b0_0
+  - pathy=0.10.1=py39hecd8cb5_0
   - pexpect=4.8.0=pyhd3eb1b0_3
   - phik=0.12.3=py39ha357a0b_0
   - pickleshare=0.7.5=pyhd3eb1b0_1003
   - pillow=10.0.1=py39h7d39338_0
   - pip=23.3.1=py39hecd8cb5_0
   - platformdirs=3.10.0=py39hecd8cb5_0
+  - preshed=3.0.6=py39he9d5cce_0
   - prometheus_client=0.14.1=py39hecd8cb5_0
   - prompt-toolkit=3.0.36=py39hecd8cb5_0
   - psutil=5.9.0=py39hca72f7f_0
   - ptyprocess=0.7.0=pyhd3eb1b0_2
   - pure_eval=0.2.2=pyhd3eb1b0_0
   - pycparser=2.21=pyhd3eb1b0_0
+  - pydantic=1.10.12=py39h6c40b1e_1
+  - pyfume=0.2.25=pyhd8ed1ab_0
   - pygments=2.15.1=py39hecd8cb5_1
+  - pyldavis=3.4.1=pyhd8ed1ab_0
   - pyopenssl=23.2.0=py39hecd8cb5_0
   - pyparsing=3.0.9=py39hecd8cb5_0
   - pysocks=1.7.1=py39hecd8cb5_0
@@ -133,41 +151,53 @@ dependencies:
   - python-fastjsonschema=2.16.2=py39hecd8cb5_0
   - python-json-logger=2.0.7=py39hecd8cb5_0
   - python-tzdata=2023.3=pyhd3eb1b0_0
+  - python_abi=3.9=2_cp39
   - pytz=2023.3.post1=py39hecd8cb5_0
   - pywavelets=1.4.1=py39h6c40b1e_0
   - pyyaml=6.0.1=py39h6c40b1e_0
   - pyzmq=25.1.0=py39hcec6c5f_0
   - readline=8.2=hca72f7f_0
   - referencing=0.30.2=py39hecd8cb5_0
-  - regex=2023.10.3=py39h6c40b1e_0
   - requests=2.31.0=py39hecd8cb5_0
   - rfc3339-validator=0.1.4=py39hecd8cb5_0
   - rfc3986-validator=0.1.1=py39hecd8cb5_0
   - rpds-py=0.10.6=py39hf2ad997_0
+  - scikit-learn=1.2.2=py39h151e6e4_1
   - scipy=1.11.4=py39hdb2ea58_0
   - seaborn=0.12.2=py39hecd8cb5_0
+  - seaborn-base=0.13.0=pyhd8ed1ab_0
   - send2trash=1.8.2=py39hecd8cb5_0
   - setuptools=68.0.0=py39hecd8cb5_0
+  - shellingham=1.5.0=py39hecd8cb5_0
+  - simpful=2.11.1=pyhd8ed1ab_0
   - six=1.16.0=pyhd3eb1b0_1
   - smart_open=5.2.1=py39hecd8cb5_0
   - sniffio=1.2.0=py39hecd8cb5_1
   - soupsieve=2.5=py39hecd8cb5_0
+  - spacy=3.5.3=py39h09c3384_0
+  - spacy-legacy=3.0.12=py39hecd8cb5_0
+  - spacy-loggers=1.0.4=py39hecd8cb5_0
   - sqlite=3.41.2=h6c40b1e_0
+  - srsly=2.4.8=py39hcec6c5f_0
   - stack_data=0.2.0=pyhd3eb1b0_0
-  - tangled-up-in-unicode=0.2.0=py39hecd8cb5_0
+  - tangled-up-in-unicode=0.1.0=pyhd3eb1b0_0
   - tbb=2021.8.0=ha357a0b_0
   - terminado=0.17.1=py39hecd8cb5_0
+  - thinc=8.1.10=py39h09c3384_0
+  - threadpoolctl=3.2.0=pyha21a80b_0
   - tinycss2=1.2.1=py39hecd8cb5_0
   - tk=8.6.12=h5d9f67b_0
   - tomli=2.0.1=py39hecd8cb5_0
   - tornado=6.3.3=py39h6c40b1e_0
   - tqdm=4.65.0=py39h01d92e1_0
   - traitlets=5.7.1=py39hecd8cb5_0
+  - typer=0.4.1=py39hecd8cb5_0
   - typing-extensions=4.7.1=py39hecd8cb5_0
   - typing_extensions=4.7.1=py39hecd8cb5_0
   - tzdata=2023c=h04d1e81_0
   - urllib3=1.26.18=py39hecd8cb5_0
-  - visions=0.5.0=pyhd3eb1b0_0
+  - visions=0.7.1=pyhd8ed1ab_0
+  - wasabi=0.9.1=py39hecd8cb5_0
   - wcwidth=0.2.5=pyhd3eb1b0_0
   - webencodings=0.5.1=py39hecd8cb5_1
   - websocket-client=0.58.0=py39hecd8cb5_4
@@ -180,14 +210,4 @@ dependencies:
   - zlib=1.2.13=h4dc903c_0
   - zstd=1.5.5=hc035e20_0
   - pip:
-    - fst-pso==1.8.1
-    - funcy==2.0
-    - fuzzytm==2.0.5
-    - miniful==0.0.6
-    - pandas==2.1.3
-    - pyfume==0.2.25
-    - pyldavis==3.4.1
-    - scikit-learn==1.3.2
-    - simpful==2.11.1
-    - threadpoolctl==3.2.0
-
+      - en-core-web-md==3.5.0
